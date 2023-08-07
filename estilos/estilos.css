@@ -1,0 +1,108 @@
+*{
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+}
+body{
+    background-color: rgb(32, 95, 121);
+}
+.head{
+    width: 100%;
+    height: 100px;
+    background-color: white;
+    position: fixed;
+    top: 0%;
+    background-image: linear-gradient(to bottom, white 80%, blue);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+
+}
+.titulo{
+    font-size: 50px;
+    padding-left: 10px;
+}
+.carrito{
+    font-size: 50px;
+    text-align: center;
+    padding-top:10px ;
+    padding-right: 60px ;
+    color: black;
+}
+.contador{
+    position: fixed;
+    top: 5px;
+    right: 140px;
+    font-size: 35px;
+    color: red;
+
+}
+.clasecarrito{
+    width: 270px;
+    height: 120px;
+    background-color: rgb(150, 136, 136);
+    border: 1px solid blue; */
+}
+
+#mostrarCarrito{
+    position: fixed;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 5%;
+    transition: all 0.9;
+    top: 200px;
+    left: 150px;
+    background-color: rgb(194, 187, 187);
+    font-size: 30px;
+    margin: 40px;
+}
+#finalizarCompra{
+    position: fixed;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 5%;
+    transition: all 0.9;
+    top: 500px;
+    left: 170px;
+    font-size:28px ;
+    background-color: rgb(194, 187, 187)
+}
+#mostrarCarrito:hover{
+    border : solid 2px blue ;
+}
+#finalizarCompra:hover{
+    border : solid 2px blue ;
+}
+.card{
+    width: 30%;
+    margin: auto;
+    margin-top: 100px;
+    border: 1px solid black;
+    border-radius: 5%;
+    box-shadow: 0px 0px 5px 5px grey;
+    transition: all 0.9s;
+    text-align: center;
+    background-color: rgb(194, 187, 187)
+}
+.card:hover{
+    transform: scale(1.1);
+}
+
+button{
+    margin: 20px;
+    display: flex;
+    
+}
+#spinner{
+
+    font-size: 70px;
+    position: fixed;
+    top: 35px;
+    left: 600px;
+}
+#cargando{
+    font-size: 40px;
+    font-weight: bold;
+    margin-right: 180px;
+    margin-top: 20px;
+}
