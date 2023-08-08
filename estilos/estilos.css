@@ -37,12 +37,14 @@ body{
     color: red;
 
 }
-.clasecarrito{
+.carritodiv{
     width: 270px;
     height: 120px;
     background-color: rgb(150, 136, 136);
-    border: 1px solid blue; */
+    border: 1px solid blue; 
 }
+
+
 
 #mostrarCarrito{
     position: fixed;
@@ -106,3 +108,6 @@ button{
     margin-right: 180px;
     margin-top: 20px;
 }
+/* .colorcarrito{
+    color: blue;
+} */

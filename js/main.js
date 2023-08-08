@@ -1,9 +1,9 @@
 function losProductos() {
 
-    // array vacio de productos
+    // array vacio de productos--------------------------------------
     stock = []
 
-    // clase constructora
+    // clase constructora---------------------------------------------
     class productos {
         constructor(nombre, precio, id,) {
             this.nombre = nombre;
@@ -12,7 +12,7 @@ function losProductos() {
         }
     }
 
-    // productos
+    // productos-------------------------------------------------
     stock.push(new productos('remera', 2400, 1))
     stock.push(new productos('pantalon', 2500, 2,))
     stock.push(new productos('camisa', 1900, 3,))
@@ -24,7 +24,7 @@ function losProductos() {
     console.log(stock)
 
 
-    // crear un div por cada uno
+    // crear un div por cada uno-------------------------------------
     for (const producto of stock) {
         let contenedor = document.createElement('main')
 
@@ -44,40 +44,56 @@ function losProductos() {
 
 
 
-    // array de carrito
+    // array de carrito----------------------------
     const carrito = []
     let botones = document.getElementsByClassName('btn')
     // agregar al carrito
     for (const boton of botones) {
         boton.onclick = () => {
+            // let carrodiv = document.getElementById('carritodiv')
+            // carrodiv.style.display = 'block'
             let productoSeleccionado = stock.find((el) => el.id === parseInt(boton.id))
             Swal.fire({
                 title: `¿Quiere agregar el producto al carrito? `,
                 text: ` PRODUCTO : ${productoSeleccionado.nombre} ,   PRECIO : ${productoSeleccionado.precio}`,
                 icon: 'success',
-                buttons: ['cancelar', 'aceptar']
+                confirmButtonText: 'okey',
+                showCancelButton: true,
             }).then((agregar) => {
-                if (agregar) {
+                if (agregar.isConfirmed) {
                     carrito.push(productoSeleccionado)
                     console.log(carrito)
                     localStorage.setItem('carrito', JSON.stringify(carrito))
+                    
                     Toastify({
                         text: `se agrego ${productoSeleccionado.nombre}`,
                         duration: 1900,
                         gravity: 'bottom'
                     }).showToast()
+                    actualizarContadorCarrito();
+
                 }
-                // implemento librerias al boton
+                else {
+                    Swal.fire('no se agrego el producto',  )
+                }
+                // implemento librerias al boton------------------------------
             })
         }
     }
 
+    function actualizarContadorCarrito() {
+        let contador = document.querySelector('.contador');
+        contador.innerHTML = carrito.length.toString();
+    }
 
+// funcion carrito mostrar productos----------------------------
+function mostrarCarritoCompras() {
     // mostrar carrito
     let MostrarCarrito = document.getElementById('mostrarCarrito')
     MostrarCarrito.onclick = () => {
         const carritoLocalStorage = JSON.parse(localStorage.getItem('carrito'))
         console.log(carritoLocalStorage)
+
         const nombreProductos = carritoLocalStorage.map((e) => e.nombre)
         Swal.fire({
             title: ` Los productos en el carrito son : `,
@@ -87,13 +103,15 @@ function losProductos() {
         })
         
     }
+}
+mostrarCarritoCompras()
 
 
-    // boton finalizar compra
+    // boton finalizar compra-----------------------------------
     let terminarCompra = document.getElementById('finalizarCompra')
     document.body.append(terminarCompra);
 
-    // terminar compra, limpiar local storage y limpiar carrito
+    // terminar compra, limpiar local storage y limpiar carrito-----------------------------------
     terminarCompra.onclick = () => {
         const carritoLocalStorage = JSON.parse(localStorage.getItem('carrito'));
         console.log(carritoLocalStorage)
@@ -102,9 +120,10 @@ function losProductos() {
             title: ` ¿desea finalizar la compra con ${nombreProductos.length} productos? `,
             text: `Productos : ${nombreProductos}`,
             icon: 'success',
-            buttons: ['cancelar', 'aceptar']
+            confirmButtonText: 'okey',
+            showCancelButton: true,
         }).then((aviso) => {
-            if (aviso) {
+            if (aviso.isConfirmed) {
                 localStorage.clear()
                 carrito.length = 0
                 Toastify({
@@ -113,13 +132,16 @@ function losProductos() {
                     gravity: 'bottom'
                 }).showToast()
             }
+            else{
+                Swal.fire('no se finalizo la compra',  )
+            }
         })
     }
 }
 
 
 
-// ingreso a la pagina y ser mayor de edad para comprar
+// ingreso a la pagina y ser mayor de edad para comprar-------------------------------------------
 function solicitarEdad() {
     Swal.fire({
         title: 'Ingrese su edad para ingresar a la pagina',
@@ -128,8 +150,8 @@ function solicitarEdad() {
         showCancelButton: true,
         confirmButtonText: 'Verificar',
     }).then((result) => {
-            // let spinner = document.getElementById('spinner')
-            // let cargando = document.getElementById('cargando')
+                let spinner = document.getElementById('spinner')
+                let cargando = document.getElementById('cargando')
             if (result.isConfirmed) {
                 const edadIngresada = parseInt(result.value);
                 if (edadIngresada >= 18) {
@@ -138,9 +160,14 @@ function solicitarEdad() {
                             title: 'Bienvenido',
                             text: 'Eres mayor de edad. ¡Acceso permitido!',
                         });
+                        setTimeout(() => {
+                            spinner.style.display='none'
+                            cargando.style.display='none'
+                            losProductos()
+                        }, 2000);
+                        spinner.style.display='block'
+                        cargando.style.display='block'
                         
-                        // spinner.style.display='block'
-                        losProductos()
                 } else {
                     Swal.fire({
                         icon: 'error',
