@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
     <!-- icono -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -32,11 +33,15 @@
         </div>
 
         <span id="cargando" style="display: none;">Cargando Productos...</span>
-        <div class="contador">0</div>
+        <div class="contador" ></div>
+        <div class="carrodiv" style="display: none;"></div>
         <div class="carrito">
-            <i class="fa-sharp fa-solid fa-cart-shopping"></i>
+            <img class="logocarro" src="./img/carritocompras.png" alt="">
         </div>
     </header>
+
+    <div class="carritoProductos"></div>
+
 
 
     <!-- spinner -->
@@ -45,8 +50,7 @@
     </div>
 
     <!-- botones -->
-    <button id="mostrarCarrito">Mostrar carrito</button>
-    <button id="finalizarCompra">Finalizar compra</button>
+    <button id="finalizarCompra" style="display: none;">Finalizar compra</button>
 
     <!-- script boostrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
@@ -64,6 +68,8 @@
 
     <!-- luxon -->
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
+
+
 
     <!-- linkeo js -->
     <script src="./js/main.js"></script>

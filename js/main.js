@@ -45,13 +45,11 @@ function losProductos() {
 
 
     // array de carrito----------------------------
-    const carrito = []
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     let botones = document.getElementsByClassName('btn')
     // agregar al carrito
     for (const boton of botones) {
         boton.onclick = () => {
-            // let carrodiv = document.getElementById('carritodiv')
-            // carrodiv.style.display = 'block'
             let productoSeleccionado = stock.find((el) => el.id === parseInt(boton.id))
             Swal.fire({
                 title: `¿Quiere agregar el producto al carrito? `,
@@ -64,7 +62,6 @@ function losProductos() {
                     carrito.push(productoSeleccionado)
                     console.log(carrito)
                     localStorage.setItem('carrito', JSON.stringify(carrito))
-                    
                     Toastify({
                         text: `se agrego ${productoSeleccionado.nombre}`,
                         duration: 1900,
@@ -74,7 +71,7 @@ function losProductos() {
 
                 }
                 else {
-                    Swal.fire('no se agrego el producto',  )
+                    Swal.fire('no se agrego el producto',)
                 }
                 // implemento librerias al boton------------------------------
             })
@@ -86,60 +83,79 @@ function losProductos() {
         contador.innerHTML = carrito.length.toString();
     }
 
-// funcion carrito mostrar productos----------------------------
-function mostrarCarritoCompras() {
-    // mostrar carrito
-    let MostrarCarrito = document.getElementById('mostrarCarrito')
-    MostrarCarrito.onclick = () => {
-        const carritoLocalStorage = JSON.parse(localStorage.getItem('carrito'))
-        console.log(carritoLocalStorage)
-
-        const nombreProductos = carritoLocalStorage.map((e) => e.nombre)
-        Swal.fire({
-            title: ` Los productos en el carrito son : `,
-            text: `Los productos que estan en el carrito son: ${nombreProductos} \n`,
-            icon: 'success',
+    function logoCarrito() {
+        let logoCarro = document.querySelector('.logocarro');
+        let carritoProductosDiv = document.querySelector('.carritoProductos');
+        logoCarro.onclick = () => {
+            const carritoLocalStorage = JSON.parse(localStorage.getItem('carrito'));
             
-        })
-        
+            // Limpiar el contenido anterior
+            carritoProductosDiv.innerHTML = '';
+            
+            carritoLocalStorage.forEach((producto) => {
+                const productoDiv = document.createElement('div');
+                productoDiv.textContent = `${producto.nombre} - Precio: $${producto.precio}`;
+                carritoProductosDiv.appendChild(productoDiv);
+            });
+            
+            Swal.fire({
+                title: 'Productos en el carrito',
+                html: carritoProductosDiv.innerHTML,
+                icon: 'success',
+            });
+        };
     }
-}
-mostrarCarritoCompras()
+    logoCarrito();
 
+
+    function calcularPrecioTotal(carrito) {
+        let precioTotal = 0;
+        carrito.forEach(producto => {
+            precioTotal += producto.precio;
+        });
+        return precioTotal;
+    }
+    
 
     // boton finalizar compra-----------------------------------
-    let terminarCompra = document.getElementById('finalizarCompra')
+    let terminarCompra = document.querySelector('#finalizarCompra')
     document.body.append(terminarCompra);
 
     // terminar compra, limpiar local storage y limpiar carrito-----------------------------------
     terminarCompra.onclick = () => {
         const carritoLocalStorage = JSON.parse(localStorage.getItem('carrito'));
-        console.log(carritoLocalStorage)
-        const nombreProductos = carritoLocalStorage.map((e) => e.nombre);
+        const nombreProductos = carritoLocalStorage.map(e => e.nombre);
+    
+        const precioTotal = calcularPrecioTotal(carritoLocalStorage);
+    
+        let productosHtml = '';
+        for (const nombreProducto of nombreProductos) {
+            productosHtml += `<p>${nombreProducto} </p>`;
+        }
+    
         Swal.fire({
-            title: ` ¿desea finalizar la compra con ${nombreProductos.length} productos? `,
-            text: `Productos : ${nombreProductos}`,
+            title: `¿Desea finalizar la compra con ${nombreProductos.length} productos?`,
+            html: `<p>Productos:</p>${productosHtml}<p>Precio Total: $${precioTotal}</p>`,
             icon: 'success',
-            confirmButtonText: 'okey',
+            confirmButtonText: 'Sí',
             showCancelButton: true,
-        }).then((aviso) => {
+        }).then(aviso => {
             if (aviso.isConfirmed) {
-                localStorage.clear()
-                carrito.length = 0
+                localStorage.clear(); // Eliminar el carrito del local storage
+                carrito = []; // Limpiar el carrito
+                actualizarContadorCarrito();
                 Toastify({
-                    text: `¡se confirmo la compra con exito! `,
+                    text: `¡Se confirmó la compra con éxito!`,
                     duration: 2000,
                     gravity: 'bottom'
-                }).showToast()
+                }).showToast();
+            } else {
+                Swal.fire('No se finalizó la compra');
             }
-            else{
-                Swal.fire('no se finalizo la compra',  )
-            }
-        })
-    }
+        });
+    };
+    
 }
-
-
 
 // ingreso a la pagina y ser mayor de edad para comprar-------------------------------------------
 function solicitarEdad() {
@@ -150,34 +166,36 @@ function solicitarEdad() {
         showCancelButton: true,
         confirmButtonText: 'Verificar',
     }).then((result) => {
-                let spinner = document.getElementById('spinner')
-                let cargando = document.getElementById('cargando')
-            if (result.isConfirmed) {
-                const edadIngresada = parseInt(result.value);
-                if (edadIngresada >= 18) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Bienvenido',
-                            text: 'Eres mayor de edad. ¡Acceso permitido!',
-                        });
-                        setTimeout(() => {
-                            spinner.style.display='none'
-                            cargando.style.display='none'
-                            losProductos()
-                        }, 2000);
-                        spinner.style.display='block'
-                        cargando.style.display='block'
-                        
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Acceso denegado',
-                        text: 'Lo siento, debes ser mayor de edad para acceder.',
-                    });
-                    ;
-                }
+        let spinner = document.getElementById('spinner')
+        let cargando = document.getElementById('cargando')
+        if (result.isConfirmed) {
+            const edadIngresada = parseInt(result.value);
+            if (edadIngresada >= 18) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Bienvenido',
+                    text: 'Eres mayor de edad. ¡Acceso permitido!',
+                });
+                setTimeout(() => {
+                    spinner.style.display = 'none'
+                    cargando.style.display = 'none'
+                    let elboton = document.querySelector('#finalizarCompra')
+                    elboton.style.display = 'block'
+                    losProductos()
+                }, 2000);
+                spinner.style.display = 'block'
+                cargando.style.display = 'block'
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Acceso denegado',
+                    text: 'Lo siento, debes ser mayor de edad para acceder.',
+                });
+                ;
             }
-        
+        }
+
     });
 }
 solicitarEdad();
